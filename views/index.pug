@@ -1,0 +1,134 @@
+extends layout
+
+block title
+  | #{config.tabTitle}
+
+block head
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+  link(rel="stylesheet" href="/css/site.css")
+
+block content
+  #floatsContainer.floats-container
+
+  //- ============ PAGE 1 — LETTER ============
+  #page-letter.page.active
+    .paper-bg(aria-hidden="true")
+    .letter-scroll
+      article#letter-paper.letter-paper(role="main")
+        .letter-tape
+        .letter-paper-inner
+          header.letter-header
+            .ornament-top(aria-hidden="true")
+              svg(width="100%" height="100%" viewBox="0 0 200 24" fill="none")
+                line(x1="0" y1="12" x2="85" y2="12" stroke="var(--accent)" stroke-width="0.7" stroke-dasharray="3 4" opacity="0.5")
+                path(d="M100 6 L106 12 L100 18 L94 12 Z" fill="var(--gold)")
+                line(x1="115" y1="12" x2="200" y2="12" stroke="var(--accent)" stroke-width="0.7" stroke-dasharray="3 4" opacity="0.5")
+            h1#letter-title.letter-title
+            time#letter-date.letter-date
+          .letter-salutation
+            span#letter-to.letter-to
+          #letter-body.letter-body(aria-label="Letter content")
+          footer.letter-footer
+            .letter-closing-wrap
+              span#letter-from.letter-from
+            .footer-divider(aria-hidden="true")
+              svg(width="100%" height="100%" viewBox="0 0 200 16" fill="none")
+                line(x1="0" y1="8" x2="70" y2="8" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="2 4")
+                circle(cx="100" cy="8" r="2.5" fill="none" stroke="var(--gold)" stroke-width="0.8")
+                line(x1="130" y1="8" x2="200" y2="8" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="2 4")
+            button#next-btn.next-button(aria-label="Continue to next journey")
+              span.next-text= config.letter.nextButton
+              span.next-arrow(aria-hidden="true") →
+
+  //- ============ PAGE 2 — MEMORIES ============
+  #page-journey.page
+    .hero-section
+      img(src=heroUrl alt="صورتنا" fetchpriority="high" decoding="async")
+      .hero-overlay
+      .hero-badge= config.hero.badge
+      #scrollHint.scroll-hint ⌄
+
+    #mainContent.content-wrap
+      h1.page-title= config.journeyTitle
+
+      .photos-stack
+        .countdown-wrapper
+          .countdown-card
+            p.countdown-title 💖 سوا من #{config.startDate} 💖
+            .countdown-grid
+              .countdown-box
+                span#days.countdown-number 0
+                span.countdown-label يوم
+              .countdown-box
+                span#hours.countdown-number 00
+                span.countdown-label ساعة
+              .countdown-box
+                span#minutes.countdown-number 00
+                span.countdown-label دقيقة
+              .countdown-box
+                span#seconds.countdown-number 00
+                span.countdown-label ثانية
+            p.countdown-sub= config.countdownSub
+
+        if config.highlight && config.highlight.text
+          .caption-card-standalone
+            .caption-box-new
+              p.caption-text-new= config.highlight.text
+            if config.highlight.date
+              .caption-pill
+                span 📅
+                span.pill-date= config.highlight.date
+
+        each photo, i in photos
+          .photo-card
+            img(src=photo.url alt=`ذكرى ${i + 2}` loading="lazy" decoding="async")
+            .ripple-container
+            if photo.caption
+              .caption-simple= photo.caption
+
+      .final-cta
+        p.cta-text
+          span.rainbow-love= config.cta.text
+        button#toPage3Btn.next-btn= config.cta.button
+
+  //- ============ PAGE 3 — MESSAGES ============
+  #page-message.page
+    .msg-wrap
+      h1.msg-title= config.messagesTitle
+      .messages-container
+        each message in config.messages
+          .message= message
+      button#backBtn.next-btn= config.backButton
+      .msg-footer= config.footer
+
+  //- ============ MUSIC PLAYER ============
+  if songs.length
+    .music-player
+      .player-inner
+        #disc.disc
+          img#discImg(src=sealUrl alt="" loading="lazy" decoding="async")
+        .player-controls
+          button#prevBtn.ctrl-btn(aria-label="Previous song")
+            i.fa-solid.fa-backward-step
+          button#playBtn.play-btn(aria-label="Play")
+            i#playIcon.fa-solid.fa-play
+          button#nextSongBtn.ctrl-btn(aria-label="Next song")
+            i.fa-solid.fa-forward-step
+        .player-info
+          .player-top
+            span#songName.song-name
+            div(style="display:flex;align-items:center;gap:5px;flex-shrink:0;")
+              span#songNum.song-num
+              #soundWave.sound-wave
+                - for (let i = 0; i < 7; i++)
+                  span
+          #progressBar.progress-bar
+            #progressFill.progress-fill
+          .time-row
+            span#currentTime 0:00
+            span#totalTime 0:00
+      audio#loveSong(preload="none")
+
+block scripts
+  script#site-data(type="application/json")!= JSON.stringify({ letter: config.letter, startDate: config.startDate, floatingHearts: config.floatingHearts, tapHearts: config.tapHearts, songs }).replace(/</g, '\\u003c')
+  script(src="/js/site.js")

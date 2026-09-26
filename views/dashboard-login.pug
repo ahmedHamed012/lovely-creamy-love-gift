@@ -1,0 +1,24 @@
+extends layout
+
+block title
+  | Dashboard 📸
+
+block head
+  link(rel="stylesheet" href="/css/dashboard.css")
+
+block content
+  main.dash-login(dir="rtl")
+    .dash-card.dash-login-card
+      .dash-login-icon 📸
+      h1.dash-title لوحة الصور
+      if disabled
+        p.dash-note
+          | الداشبورد مقفولة. حط
+          code ADMIN_PASSWORD
+          | في ملف .env (أو في Environment Variables على Vercel) وبعدين اعمل Redeploy.
+      else
+        form.dash-login-form(action="/dashboard/login" method="POST" autocomplete="off")
+          input(type="password" name="password" placeholder="باسورد الداشبورد" required autofocus)
+          if error
+            p.dash-error= error
+          button.dash-btn.dash-btn-primary(type="submit") دخول

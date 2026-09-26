@@ -1,0 +1,45 @@
+extends layout
+
+block title
+  | Dashboard 📸
+
+block head
+  link(rel="stylesheet" href="/css/dashboard.css")
+
+block content
+  main.dash(dir="rtl")
+    header.dash-header
+      div
+        h1.dash-title لوحة الصور 📸
+        p.dash-sub اضغط على أي صورة وغيّرها، والتغيير بيظهر في الموقع على طول.
+      nav.dash-actions
+        a.dash-btn(href="/index" target="_blank" rel="noopener") افتح الموقع ↗
+        a.dash-btn.dash-btn-ghost(href="/dashboard/logout") خروج
+
+    if mode === 'local'
+      p.dash-banner.dash-banner-info
+        | إنت شغال على جهازك دلوقتي، فالصور بتتحفظ في فولدر
+        code public/uploads
+        | . على Vercel هتتحفظ في Vercel Blob.
+    else if mode === 'none'
+      p.dash-banner.dash-banner-warn
+        | الرفع مش هيشتغل لسه: فعّل Vercel Blob من لوحة Vercel (Storage ← Create ← Blob) واربطه بالمشروع، وبعدين اعمل Redeploy.
+
+    section.dash-grid
+      each slot in slots
+        article.slot(data-slot=slot.id data-custom=String(slot.custom))
+          label.slot-preview(class=slot.id === 'seal' ? 'is-round' : '')
+            img(src=slot.url alt=slot.label loading="lazy")
+            input.slot-input(type="file" accept="image/*")
+            span.slot-overlay تغيير الصورة
+            span.slot-spinner(aria-hidden="true")
+          .slot-body
+            .slot-text
+              h2.slot-label= slot.label
+              p.slot-hint= slot.hint
+            button.slot-reset(type="button" title="رجّع الصورة الافتراضية") ✕
+          p.slot-status(role="status")
+
+
+block scripts
+  script(src="/js/dashboard.js")
