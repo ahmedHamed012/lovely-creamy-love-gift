@@ -82,7 +82,6 @@ export default {
   // الأغاني: اسم الأغنية + لينك مباشر للملف (mp3 / m4a / mp4)
   // لو مفيش ولا أغنية ليها url المشغّل مش هيظهر خالص
   songs: [
-    { name: 'وانت معايا 😍', url: '' },
-    { name: 'علي حبك', url: '' },
+    { name: 'خليك معايا 😍', url: 'https://serv100.albumaty.com/dl/3en/amr-diab/albums/el-lilady/10.Khalik_Maaaya.mp3' },
   ],
 };
