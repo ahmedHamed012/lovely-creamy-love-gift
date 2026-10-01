@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  if (!checkPassword('site', req.body?.password)) return renderLogin(res, 'الكلمة السرية مش صح 💔 جرّبي تاني');
+  if (!checkPassword('site', req.body?.password)) return renderLogin(res, 'لا غلط حاولي تاني يا منوري');
   signIn(res, 'site');
   res.redirect('/index');
 });
