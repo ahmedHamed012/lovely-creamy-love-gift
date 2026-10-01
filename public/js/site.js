@@ -245,6 +245,21 @@ if (audio && songs.length) {
   audio.addEventListener('ended', () => loadSong(curSong + 1, true));
 
   loadSong(0, false);
+
+  // Browsers only allow sound after the visitor has interacted with the site.
+  // Try right away (usually works after typing the password); otherwise start
+  // on the first tap anywhere — except on the player, which handles itself.
+  audio.play().then(() => setPlaying(true)).catch(() => {
+    const startOnGesture = (e) => {
+      if (e.target.closest('.music-player')) return;
+      removeGestureListeners();
+      if (audio.paused) play();
+    };
+    const events = ['pointerdown', 'keydown', 'touchstart'];
+    const removeGestureListeners = () => events.forEach((ev) => document.removeEventListener(ev, startOnGesture, true));
+    events.forEach((ev) => document.addEventListener(ev, startOnGesture, true));
+    audio.addEventListener('play', removeGestureListeners, { once: true });
+  });
 }
 
 /* ==================== EVENT LISTENERS ==================== */
